@@ -18,9 +18,10 @@ int cell_init(Cell *c)
 {
         for (int i = 0; i < 9; i++)
         {
-                c->is_possible[i] = false;
-                c->number = 0;
+                c->is_possible[i] = true;
         }
+        
+        c->number = 0;
 
         return 0;
 }

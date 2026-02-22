@@ -3,5 +3,6 @@
 
 #include "board.h"
 #include "io.h"
+#include "solver.h"
 
 #endif
