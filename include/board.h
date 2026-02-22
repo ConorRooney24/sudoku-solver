@@ -15,4 +15,8 @@ typedef Cell Grid[9][9]; // 9 by 9 grid of cells in y, x. Y increases down, x in
 int grid_init(Grid *g);
 int cell_init(Cell *c);
 
+void grid_print(const Grid g);           // Prints the grid showing only the solved numbers in each cell.
+void grid_print_cell_info(const Grid g); // Calls Cell_print for every cell on a grid and displays cell coordinates beside each cells information.
+void cell_print(const Cell c);           // Prints a cells information. If it has been solved or not, And its possible numbers.
+
 #endif // BOARD_H
