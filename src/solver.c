@@ -1,4 +1,5 @@
 #include "../include/solver.h"
+//#include <stdio.h>
 
 int solve_strip_possibilities(Grid *g, int y, int x)
 {
@@ -117,4 +118,111 @@ void solve_block_hidden_single(Grid *g, int block_y, int block_x)
                         (*g)[last_found_y][last_found_x].number = n + 1;
                 }
         }
+}
+
+void solve_block_pointing_groups_row(Grid *g, int block_y, int block_x)
+{
+        for (int i = 0; i < 9; i++) // for every possible number
+        {
+                int num_possibilities_in_block = solve_block_sum_possibilities_num(*g, block_y, block_x, i+1);
+
+                //printf("Scanning block [%d, %d] rows for possibilities of %d - found %d\n", block_y, block_x, i+1, num_possibilities_in_block);
+
+                if (!(num_possibilities_in_block == 2 || num_possibilities_in_block == 3)) continue;
+                
+
+                int actual_y, actual_x;
+                for (int cell_y = 0; cell_y < 3; cell_y++) // for every row
+                {
+                        int count_possibilities_in_row = 0; // The count of the current number found on this row
+
+                        for (int cell_x = 0; cell_x < 3; cell_x++) // for every cell in this row (column)
+                        {
+                                actual_y = cell_y + (block_y * 3);
+                                actual_x = cell_x + (block_x * 3);
+                                
+
+                                if ((*g)[actual_y][actual_x].number != 0) continue; // If solved continue
+                                if ((*g)[actual_y][actual_x].is_possible[i]) count_possibilities_in_row++;
+
+                                if (count_possibilities_in_row == num_possibilities_in_block) // If we have found all of the possibilities on the same row - then we remove the current number as a possibility from all unsolved cells on this row outside of this block.
+                                {
+                                        for (int x = 0; x < 9; x++) // For every cell on this row (where we have found a pointing pair/triple)
+                                        {
+                                                if ((*g)[actual_y][x].number != 0) continue; // if solved, continue
+                                                if (solve_cell_in_block(actual_y, x, block_y, block_x)) continue; // If the cell is in the block we are checking continue
+
+                                                (*g)[actual_y][x].is_possible[i] = false;
+                                        }
+                                }
+                        }
+                }
+        }
+}
+
+void solve_block_pointing_groups_column(Grid *g, int block_y, int block_x)
+{
+        for (int i = 0; i < 9; i++) // for every possible number
+        {
+                int num_possibilities_in_block = solve_block_sum_possibilities_num(*g, block_y, block_x, i+1);
+
+                //printf("Scanning block [%d, %d] columns for possibilities of %d - found %d\n", block_y, block_x, i+1, num_possibilities_in_block);
+
+                if (!(num_possibilities_in_block == 2 || num_possibilities_in_block == 3)) continue;
+                
+
+                int actual_y, actual_x;
+                for (int cell_x = 0; cell_x < 3; cell_x++) // for every column
+                {
+                        int count_possibilities_in_column = 0; // The count of the current number found on this column
+
+                        for (int cell_y = 0; cell_y < 3; cell_y++) // for every cell in this column (row)
+                        {
+                                actual_y = cell_y + (block_y * 3);
+                                actual_x = cell_x + (block_x * 3);
+                                
+
+                                if ((*g)[actual_y][actual_x].number != 0) continue; // If solved continue
+                                if ((*g)[actual_y][actual_x].is_possible[i]) count_possibilities_in_column++;
+
+                                if (count_possibilities_in_column == num_possibilities_in_block) // If we have found all of the possibilities on the same row - then we remove the current number as a possibility from all unsolved cells on this row outside of this block.
+                                {
+                                        for (int y = 0; y < 9; y++) // For every cell on this column (the column where we have found a pointing pair/triple)
+                                        {
+                                                if ((*g)[y][actual_x].number != 0) continue; // if solved, continue
+                                                if (solve_cell_in_block(y, actual_x, block_y, block_x)) continue; // If the cell is in the block we are checking continue
+
+                                                (*g)[y][actual_x].is_possible[i] = false;
+                                        }
+                                }
+                        }
+                }
+        }
+}
+
+int solve_block_sum_possibilities_num(const Grid g, int block_y, int block_x, int num)
+{
+        int n = 0;
+
+        int actual_y, actual_x;
+        for (int cell_y = 0; cell_y < 3; cell_y++)
+        {
+                actual_y = cell_y + (block_y * 3);
+                for (int cell_x = 0; cell_x < 3; cell_x++)
+                {
+                        actual_x = cell_x + (block_x * 3);
+                        
+                        if (g[actual_y][actual_x].number != 0) continue; // If solved continue
+
+                        if (g[actual_y][actual_x].is_possible[num - 1]) n++;
+                }
+        }
+
+        return n;
+}
+
+bool solve_cell_in_block(int cell_y, int cell_x, int block_y, int block_x)
+{
+        if ((int)(cell_y/3) == block_y && (int)(cell_x/3) == block_x) return true;
+        else return false;
 }
