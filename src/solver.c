@@ -76,3 +76,45 @@ int solve_sum_possibilities(const Cell c)
 
         return n;
 }
+
+void solve_block_hidden_single(Grid *g, int block_y, int block_x)
+{
+        // block_y and block_x are coordinates of a block from 0-2
+        // cell_y and cell_x are coordinates of a cell in that block from 0-2
+        // actual_x and actual_y are coordinates on the grid
+
+        int actual_y, actual_x;
+        int counter;                    // Counting how many times the current number shows up as possible.
+        int last_found_y, last_found_x; // The last location in which we found a match for the current number
+
+        for (int n = 0; n < 9; n++) // for every possible number 1-9
+        {
+                counter = 0;
+
+                for (int cell_y = 0; cell_y < 3; cell_y++)
+                {
+                        actual_y = cell_y + (block_y * 3);
+
+                        for (int cell_x = 0; cell_x < 3; cell_x++)
+                        {
+                                actual_x = cell_x + (block_x * 3);
+                                
+                                if ((*g)[actual_y][actual_x].number != 0) continue; // If solved continue
+
+                                if ((*g)[actual_y][actual_x].is_possible[n])
+                                {
+                                        counter++;
+                                        last_found_y = actual_y;
+                                        last_found_x = actual_x;
+                                }
+                                
+                        }
+                        
+                }
+
+                if (counter == 1) // If this current number has only one possible spot in this block
+                {
+                        (*g)[last_found_y][last_found_x].number = n + 1;
+                }
+        }
+}
