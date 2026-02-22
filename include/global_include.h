@@ -2,5 +2,6 @@
 #define GLOBAL_INCLUDE_H
 
 #include "board.h"
+#include "io.h"
 
 #endif
