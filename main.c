@@ -21,5 +21,9 @@ int main(void)
 
         io_write("output.txt", grid);
 
+        io_read("input.txt", &grid);
+        
+        grid_print(grid);
+
         return 0;
 }
