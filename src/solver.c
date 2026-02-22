@@ -48,3 +48,31 @@ int solve_strip_possibilities(Grid *g, int y, int x)
 
         return 0;
 }
+
+void solve_set_solved(Grid *g)
+{
+        for (int y = 0; y < 9; y++)
+        {
+                for (int x = 0; x < 9; x++)
+                {
+                        if (solve_sum_possibilities((*g)[y][x]) == 1)
+                        {
+                                for (int i = 0; i < 9; i++)
+                                {
+                                        if ((*g)[y][x].is_possible[i]) (*g)[y][x].number = i + 1;
+                                }
+                        }
+                }
+        }
+}
+
+int solve_sum_possibilities(const Cell c)
+{
+        int n = 0;
+        for (int i = 0; i < 9; i++)
+        {
+                if (c.is_possible[i]) n++;
+        }
+
+        return n;
+}
