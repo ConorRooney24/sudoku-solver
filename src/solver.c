@@ -1,53 +1,70 @@
 #include "../include/solver.h"
 //#include <stdio.h>
 
-int strip_possibilities_cell(Grid *g, int y, int x)
+void remove_possibles_grid(Grid *g)
 {
-        // Check row
-        for (int i = 0; i < 9; i++)
+        for (int y = 0; y < 9; y++)
         {
-                if (i == x) continue; // If we are on the target block
-                if ((*g)[y][i].number == 0) continue; // if we are on an unsolved block
+                for (int x = 0; x < 9; x++)
+                {
+                        remove_possibles_cell(g, y, x);
+                }
+        }
+}
+
+void remove_possibles_cell(Grid *g, int cell_y, int cell_x)
+{
+        remove_possibles_cell_by_row(g, cell_y, cell_x);
+        remove_possibles_cell_by_column(g, cell_y, cell_x);
+        remove_possibles_cell_by_block(g, cell_y, cell_x);
+}
+
+void remove_possibles_cell_by_row(Grid *g, int cell_y, int cell_x)
+{
+        for (int current_x = 0; current_x < 9; current_x++)
+        {
+                if (current_x == cell_x) continue; // If we are on the target block
+                if ((*g)[cell_y][current_x].number == 0) continue; // if we are on an unsolved block
 
                 // Only executes if we are on a solved block that is not the target block:
-                (*g)[y][x].is_possible[(*g)[y][i].number - 1] = false; // it is not possible for the target cell to be the value of the solved cell on the same row
-
+                (*g)[cell_y][cell_x].is_possible[(*g)[cell_y][current_x].number - 1] = false; // it is not possible for the target cell to be the value of the solved cell on the same row
         }
-        
-        // Check column
-        for (int i = 0; i < 9; i++)
+}
+
+void remove_possibles_cell_by_column(Grid *g, int cell_y, int cell_x)
+{
+        for (int current_y = 0; current_y < 9; current_y++)
         {
-                if (i == y) continue;
-                if ((*g)[i][x].number == 0) continue;
+                if (current_y == cell_y) continue;
+                if ((*g)[current_y][cell_x].number == 0) continue;
 
-                (*g)[y][x].is_possible[(*g)[i][x].number - 1] = false;
+                (*g)[cell_y][cell_x].is_possible[(*g)[current_y][cell_x].number - 1] = false;
         }
-        
+}
 
-        // Check block (little bit of a mess but it works)
-        int block_y, block_x; // the coords of the block of the target cell. so the top left block is 0,0, the middle is 1,1, and the bottom right is 2,2.
-        block_y = y/3;
-        block_x = x/3;
-
+void remove_possibles_cell_by_block(Grid *g, int cell_y, int cell_x)
+{
+        int block_y, block_x;   // the coords of the block of the target cell. so the top left block is 0,0, the middle is 1,1, and the bottom right is 2,2.
         int actual_y, actual_x; // coordinates on the board rather than coordinates in the block (i and j are coordinates in the block). So we are using for loops from 0 to 2 to search in a block pattern but we need to scale the numbers based on which block we are searching
 
-        for (int i = 0; i < 3; i++)
+        block_y = cell_y/3;
+        block_x = cell_x/3;
+
+        for (int current_y = 0; current_y < 3; current_y++)
         {
-                actual_y = i + (3 * block_y);
+                actual_y = current_y + (3 * block_y);
 
-                for (int j = 0; j < 3; j++)
+                for (int current_x = 0; current_x < 3; current_x++)
                 {
-                        actual_x = j + (3 * block_x);
+                        actual_x = current_x + (3 * block_x);
 
-                        if (actual_x == x && actual_y == y) continue; // If we are on the target block
+                        if (actual_x == cell_x && actual_y == cell_y) continue; // If we are on the target block
                         if ((*g)[actual_y][actual_x].number == 0) continue; // if we are on an unsolved block
                         
-                        (*g)[y][x].is_possible[(*g)[actual_y][actual_x].number - 1] = false; 
+                        (*g)[cell_y][cell_x].is_possible[(*g)[actual_y][actual_x].number - 1] = false; 
 
                 }
         }
-
-        return 0;
 }
 
 void set_sole_possibilities_solved(Grid *g)

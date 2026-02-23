@@ -41,14 +41,7 @@ int main(void)
                                 break;
 
                         case 1:
-                                for (int y = 0; y < 9; y++)
-                                {
-                                        for (int x = 0; x < 9; x++)
-                                        {
-                                                strip_possibilities_cell(&grid, y, x);
-                                        }
-                                        
-                                }
+                                remove_possibles_grid(&grid);
                                 break;
 
                         case 2:
@@ -56,18 +49,7 @@ int main(void)
                                 break;
 
                         case 3:
-                                if (auto_strip)
-                                {
-                                        for (int y = 0; y < 9; y++)
-                                        {
-                                                for (int x = 0; x < 9; x++)
-                                                {
-                                                        strip_possibilities_cell(&grid, y, x);
-                                                }
-                                                
-                                        }
-                                }
-
+                                if (auto_strip) remove_possibles_grid(&grid);
                                 if (auto_set_solved) set_sole_possibilities_solved(&grid);
 
                                 for (int y = 0; y < 3; y++)
@@ -82,17 +64,7 @@ int main(void)
                                 break;
 
                         case 4:
-                                if (auto_strip)
-                                {
-                                        for (int y = 0; y < 9; y++)
-                                        {
-                                                for (int x = 0; x < 9; x++)
-                                                {
-                                                        strip_possibilities_cell(&grid, y, x);
-                                                }
-                                        }
-                                }
-
+                                if (auto_strip) remove_possibles_grid(&grid);
                                 if (auto_set_solved) set_sole_possibilities_solved(&grid); 
 
                                 for (int y = 0; y < 3; y++)
@@ -107,18 +79,7 @@ int main(void)
                                 break;
 
                         case 5:
-                                if (auto_strip)
-                                {
-                                        for (int y = 0; y < 9; y++)
-                                        {
-                                                for (int x = 0; x < 9; x++)
-                                                {
-                                                        strip_possibilities_cell(&grid, y, x);
-                                                }
-                                                
-                                        }
-                                }
-
+                                if (auto_strip) remove_possibles_grid(&grid);
                                 if (auto_set_solved) set_sole_possibilities_solved(&grid);
 
                                 for (int y = 0; y < 3; y++)
