@@ -7,13 +7,13 @@ int main(void)
         Grid grid;
         grid_init(&grid);
 
-        io_read("data/puzzle_easy_1.txt", &grid);
+        io_read("data/puzzle_medium_1.txt", &grid);
 
-        printf("----------- BEFORE SOLVING -----------\n");
+        //printf("----------- BEFORE SOLVING -----------\n");
         grid_print(grid);
-        grid_print_cell_info(grid);
+        //grid_print_cell_info(grid);
 
-        for (int i = 0; i < 100; i++) // For now we just loop 100 times, strip possibilities, set solved, and repeat.
+        for (int i = 0; i < 1000; i++) // For now we just loop 100 times, strip possibilities, set solved, and repeat.
         {
                 for (int y = 0; y < 9; y++)
                 {
@@ -50,9 +50,9 @@ int main(void)
                 solve_set_solved(&grid);
         }
 
-        printf("----------- AFTER SOLVING -----------\n");
+        //printf("----------- AFTER SOLVING -----------\n");
         grid_print(grid);
-        grid_print_cell_info(grid);
+        //grid_print_cell_info(grid);
 
         io_write("output.txt", grid);
         
