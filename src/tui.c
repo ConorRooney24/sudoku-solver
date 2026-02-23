@@ -1,6 +1,11 @@
 #include "../include/tui.h"
 #include <stdio.h>
 
+void clear_terminal()
+{
+        printf("\033[2J\033[H");
+}
+
 void colour_fore_set(Colour c)
 {
         printf("\033[38;2;%d;%d;%dm", c.r, c.g, c.b);

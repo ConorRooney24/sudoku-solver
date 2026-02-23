@@ -6,12 +6,14 @@
 #define BOARD_BLOCK_PRIMARY   ((Colour){226, 247, 255})
 #define BOARD_BLOCK_SECONDARY ((Colour){200, 240, 255})
 #define BOARD_FONT_PRIMARY    ((Colour){0, 0, 0})
-#define BOARD_FONT_SECONDARY  ((Colour){120, 120, 120})
+#define BOARD_FONT_SECONDARY  ((Colour){200, 200, 200})
 
 typedef struct Colour
 {
         uint8_t r, g, b;
 } Colour;
+
+void clear_terminal();
 
 void colour_fore_set(Colour c);
 void colour_back_set(Colour c);
