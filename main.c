@@ -9,52 +9,147 @@ int main(void)
 
         io_read("data/puzzle_medium_1.txt", &grid);
 
-        //printf("----------- BEFORE SOLVING -----------\n");
-        grid_print(grid);
-        //grid_print_cell_info(grid);
+        bool auto_strip = true;
+        bool auto_set_solved = true;
 
-        for (int i = 0; i < 1000; i++) // For now we just loop 100 times, strip possibilities, set solved, and repeat.
+        int user_input = 0;
+        while (1)
         {
-                for (int y = 0; y < 9; y++)
+                clear_terminal();
+                grid_print(grid);
+                printf("\n");
+                printf("[1] Strip Possibilities\n");
+                printf("[2] Set Solved\n");
+                printf("\n");
+                printf("[3] Solve Hidden Singles\n");
+                printf("[4] Solve pointing groups (row)\n");
+                printf("[5] Solve pointing groups (column)\n");
+                printf("\n");
+                printf("[6] Write to 'output.txt'\n");
+                printf("\n");
+                printf("[7] Toggle Auto Strip on 3, 4, 5 (%d)\n", auto_strip ? 1 : 0);
+                printf("[8] Toggle Auto Set Solved on 3, 4, 5 (%d)\n", auto_set_solved ? 1 : 0);
+                printf("\n");
+                printf("[0] Exit\n");
+                printf("$ ");
+                scanf("%d", &user_input);
+
+                switch (user_input)
                 {
-                        for (int x = 0; x < 9; x++)
-                        {
-                                solve_strip_possibilities(&grid, y, x);
-                        }
+                        case 0:
+                                return 0;
+                                break;
+
+                        case 1:
+                                for (int y = 0; y < 9; y++)
+                                {
+                                        for (int x = 0; x < 9; x++)
+                                        {
+                                                strip_possibilities_cell(&grid, y, x);
+                                        }
+                                        
+                                }
+                                break;
+
+                        case 2:
+                                set_sole_possibilities_solved(&grid);
+                                break;
+
+                        case 3:
+                                if (auto_strip)
+                                {
+                                        for (int y = 0; y < 9; y++)
+                                        {
+                                                for (int x = 0; x < 9; x++)
+                                                {
+                                                        strip_possibilities_cell(&grid, y, x);
+                                                }
+                                                
+                                        }
+                                }
+
+                                if (auto_set_solved) set_sole_possibilities_solved(&grid);
+
+                                for (int y = 0; y < 3; y++)
+                                {
+                                        for (int x = 0; x < 3; x++)
+                                        {
+                                                solve_hidden_singles_block(&grid, y, x);
+                                        }
+                                        
+                                }
+                                
+                                break;
+
+                        case 4:
+                                if (auto_strip)
+                                {
+                                        for (int y = 0; y < 9; y++)
+                                        {
+                                                for (int x = 0; x < 9; x++)
+                                                {
+                                                        strip_possibilities_cell(&grid, y, x);
+                                                }
+                                        }
+                                }
+
+                                if (auto_set_solved) set_sole_possibilities_solved(&grid); 
+
+                                for (int y = 0; y < 3; y++)
+                                {
+                                        for (int x = 0; x < 3; x++)
+                                        {
+                                                solve_pointing_groups_row_block(&grid, y, x);
+                                        }
+                                        
+                                }
+
+                                break;
+
+                        case 5:
+                                if (auto_strip)
+                                {
+                                        for (int y = 0; y < 9; y++)
+                                        {
+                                                for (int x = 0; x < 9; x++)
+                                                {
+                                                        strip_possibilities_cell(&grid, y, x);
+                                                }
+                                                
+                                        }
+                                }
+
+                                if (auto_set_solved) set_sole_possibilities_solved(&grid);
+
+                                for (int y = 0; y < 3; y++)
+                                {
+                                        for (int x = 0; x < 3; x++)
+                                        {
+                                                solve_pointing_groups_column_block(&grid, y, x);
+                                        }
+                                        
+                                }
+
+                                break;
+
+                        case 6:
+                                io_write("output.txt", grid);
+                                break;
+
+                        case 7:
+                                if (auto_strip) auto_strip = false;
+                                else auto_strip = true;
+                                break;
+
+                        case 8:
+                                if (auto_set_solved) auto_set_solved = false;
+                                else auto_set_solved = true;
+                                break;
                         
+                        default:
+                                break;
                 }
-
-                solve_set_solved(&grid);
-                
-                for (int y = 0; y < 3; y++)
-                {
-                        for (int x = 0; x < 3; x++)
-                        {
-                                solve_block_hidden_single(&grid, y, x);
-                        }
-                        
-                }
-
-                solve_set_solved(&grid);
-
-                for (int y = 0; y < 3; y++)
-                {
-                        for (int x = 0; x < 3; x++)
-                        {
-                                solve_block_pointing_groups_column(&grid, y, x);
-                                solve_block_pointing_groups_row(&grid, y, x);
-                        }
-                        
-                }
-
-                solve_set_solved(&grid);
         }
-
-        //printf("----------- AFTER SOLVING -----------\n");
-        grid_print(grid);
-        //grid_print_cell_info(grid);
-
-        io_write("output.txt", grid);
         
         return 0;
 }
