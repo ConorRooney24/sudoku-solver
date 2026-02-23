@@ -73,13 +73,18 @@ void set_sole_possibilities_solved(Grid *g)
         {
                 for (int x = 0; x < 9; x++)
                 {
-                        if (num_possibilities_cell((*g)[y][x]) == 1)
-                        {
-                                for (int i = 0; i < 9; i++)
-                                {
-                                        if ((*g)[y][x].is_possible[i]) (*g)[y][x].number = i + 1;
-                                }
-                        }
+                        set_sole_possibilities_solved_cell(g, y, x);
+                }
+        }
+}
+
+void set_sole_possibilities_solved_cell(Grid *g, int cell_y, int cell_x)
+{
+        if (num_possibilities_cell((*g)[cell_y][cell_x]) == 1)
+        {
+                for (int i = 0; i < 9; i++)
+                {
+                        if ((*g)[cell_y][cell_x].is_possible[i]) (*g)[cell_y][cell_x].number = i + 1;
                 }
         }
 }
