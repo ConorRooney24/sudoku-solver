@@ -1,6 +1,27 @@
 #include "../include/solver.h"
 //#include <stdio.h>
 
+bool are_different_grids(const Grid g1, const Grid g2)
+{
+        for (int y = 0; y < 9; y++)
+        {
+                for (int x = 0; x < 9; x++)
+                {
+                        if (g1[y][x].number != g2[y][x].number) return true;
+                        
+                        if (g1[y][x].number == 0) // if unsolved check possibles
+                        {
+                                for (int i = 0; i < 9; i++)
+                                {
+                                        if (g1[y][x].is_possible[i] != g2[y][x].is_possible[i]) return true;
+                                }
+                        }
+                }
+        }
+
+        return false;
+}
+
 bool is_solved_grid(const Grid g)
 {
         for (int y = 0; y < 9; y++)

@@ -4,6 +4,7 @@
 #include "board.h"
 #include <stdbool.h>
 
+bool are_different_grids(const Grid g1, const Grid g2); // compares two grids. returns true if they are different. false if the same. Checks both solved numbers and unsolved number possibilities.
 bool is_solved_grid(const Grid g); // Returns true if a grid is solved, false if not
 int num_possibilities_cell(const Cell c); // returns the number of possibilities a given cell has
 int sum_possibilities_num_in_block(const Grid g, int block_y, int block_x, int num); // Takes grid, the coordinates of a block, and a number, returns how many cells have a possibility of being the given number
