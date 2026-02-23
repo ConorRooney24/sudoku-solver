@@ -20,7 +20,8 @@ void set_sole_possibilities_solved_cell(Grid *g, int cell_y, int cell_x); // Loo
 void solve_hidden_singles_grid (Grid *g);                           // Calls solve_hidden_singles_block for every block on the grid
 void solve_hidden_singles_block(Grid *g, int block_y, int block_x); // Takes a grid and the coordinates of a block (0-2) and looks at the unsolved cells. For each number 1-9, it counts how many cells have that number as a possibility. If a given number only has one possible cell in a block, it sets that cell to solved.
 
-void solve_pointing_groups_row_block(Grid *g, int block_y, int block_x);             // FOR A ROW: Takes a grid and the coordinates of a block, attempts to find pointing pairs or pointing triplets and then removes possibilities from corresponding cells outside of the block. For example, if we look in a block and find that only two of the unsolved squares have a possibility of being 2, if those cells are on the same row (or column), we know that there will not be a 2 on that row (or column) outside of this block.
-void solve_pointing_groups_column_block(Grid *g, int block_y, int block_x);          // Same as above but for columns instead of rows
+void solve_pointing_groups_grid (Grid *g);                                  // Calls solve_pointing_group functions for both columns and rows for every block in the grid.
+void solve_pointing_groups_row_block(Grid *g, int block_y, int block_x);    // FOR A ROW: Takes a grid and the coordinates of a block, attempts to find pointing pairs or pointing triplets and then removes possibilities from corresponding cells outside of the block. For example, if we look in a block and find that only two of the unsolved squares have a possibility of being 2, if those cells are on the same row (or column), we know that there will not be a 2 on that row (or column) outside of this block.
+void solve_pointing_groups_column_block(Grid *g, int block_y, int block_x); // Same as above but for columns instead of rows
 
 #endif

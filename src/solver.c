@@ -180,17 +180,25 @@ void solve_hidden_singles_block(Grid *g, int block_y, int block_x)
         }
 }
 
+void solve_pointing_groups_grid(Grid *g)
+{
+        for (int y = 0; y < 3; y++)
+        {
+                for (int x = 0; x < 3; x++)
+                {
+                        solve_pointing_groups_column_block(g, y, x);
+                        solve_pointing_groups_row_block(g, y, x);
+                }
+        }
+}
+
 void solve_pointing_groups_row_block(Grid *g, int block_y, int block_x)
 {
         for (int i = 0; i < 9; i++) // for every possible number
         {
                 int num_possibilities_in_block = sum_possibilities_num_in_block(*g, block_y, block_x, i+1); 
-
-                //printf("Scanning block [%d, %d] rows for possibilities of %d - found %d\n", block_y, block_x, i+1, num_possibilities_in_block);
-
                 if (!(num_possibilities_in_block == 2 || num_possibilities_in_block == 3)) continue;
                 
-
                 int actual_y, actual_x;
                 for (int cell_y = 0; cell_y < 3; cell_y++) // for every row
                 {
@@ -226,12 +234,8 @@ void solve_pointing_groups_column_block(Grid *g, int block_y, int block_x)
         for (int i = 0; i < 9; i++) // for every possible number
         {
                 int num_possibilities_in_block = sum_possibilities_num_in_block(*g, block_y, block_x, i+1);
-
-                //printf("Scanning block [%d, %d] columns for possibilities of %d - found %d\n", block_y, block_x, i+1, num_possibilities_in_block);
-
                 if (!(num_possibilities_in_block == 2 || num_possibilities_in_block == 3)) continue;
                 
-
                 int actual_y, actual_x;
                 for (int cell_x = 0; cell_x < 3; cell_x++) // for every column
                 {
