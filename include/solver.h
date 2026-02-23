@@ -10,6 +10,10 @@ int num_possibilities_cell(const Cell c); // returns the number of possibilities
 int sum_possibilities_num_in_block(const Grid g, int block_y, int block_x, int num); // Takes grid, the coordinates of a block, and a number, returns how many cells have a possibility of being the given number
 bool is_cell_in_block(int cell_y, int cell_x, int block_y, int block_x);             // Returns true if the coordinates of the given cell are inside of the coordinates of the given block, and false if not
 
+void remove_possibles_and_set_soles_solved_until_stable(Grid *gm, int limit); // runs in a loop remove_possibles_and_set_soles_solved and checks for differences. does not stop looping until there are no more differences or the limit has been reached.
+void remove_possibles_and_set_soles_solved(Grid *g);                          // Runs both remove_possibles_grid and set_sole_possibles_solved on a grid
+
+// TODO rename these to remove_impossibles: (dont know how I didn't think of that before)
 void remove_possibles_grid           (Grid *g);                         // Goes over every cell in the grid and calls the remove_possibles_cell function.
 void remove_possibles_cell           (Grid *g, int cell_y, int cell_x); // Takes a cell, calls all remove_possible functions for row, column, and block. Basically this will look at all of the neighbour solved cells that correspond to the target cell and will remove possibilities from the target cell if it finds solved numbers. 
 void remove_possibles_cell_by_row    (Grid *g, int cell_y, int cell_x); // Takes a cell, checks for solved neighbors on the same row and removes possibilities from the target cell based on what is found.

@@ -86,6 +86,38 @@ bool is_cell_in_block(int cell_y, int cell_x, int block_y, int block_x)
         else return false;
 }
 
+void remove_possibles_and_set_soles_solved_until_stable(Grid *g, int limit)
+{
+        Grid before;
+        int iteration = 0;
+        while (iteration < limit)
+        {
+                // Copy g into before
+                for (int y = 0; y < 9; y++)
+                {
+                        for (int x = 0; x < 9; x++)
+                        {
+                                before[y][x].number = (*g)[y][x].number;
+
+                                for (int i = 0; i < 9; i++)
+                                {
+                                        before[y][x].is_possible[i] = (*g)[y][x].is_possible[i]; 
+                                }
+                        }
+                }
+                
+                remove_possibles_and_set_soles_solved(g);
+
+                if(!are_different_grids(before, *g)) break;
+        }
+}
+
+void remove_possibles_and_set_soles_solved(Grid *g)
+{
+        remove_possibles_grid(g);
+        set_sole_possibilities_solved(g);
+}
+
 void remove_possibles_grid(Grid *g)
 {
         for (int y = 0; y < 9; y++)
