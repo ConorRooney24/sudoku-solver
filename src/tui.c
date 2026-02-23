@@ -29,11 +29,11 @@ void cursor_move(char direction, int times)
                         break;
 
                 case 'l':
-                        printf("\033[%dC", times);
+                        printf("\033[%dD", times);
                         break;
 
                 case 'r':
-                        printf("\033[%dD", times);
+                        printf("\033[%dC", times);
                         break;
                 
                 default:
