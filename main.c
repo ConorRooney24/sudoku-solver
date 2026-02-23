@@ -51,16 +51,7 @@ int main(void)
                         case 3:
                                 if (auto_strip) remove_possibles_grid(&grid);
                                 if (auto_set_solved) set_sole_possibilities_solved(&grid);
-
-                                for (int y = 0; y < 3; y++)
-                                {
-                                        for (int x = 0; x < 3; x++)
-                                        {
-                                                solve_hidden_singles_block(&grid, y, x);
-                                        }
-                                        
-                                }
-                                
+                                solve_hidden_singles_grid(&grid);
                                 break;
 
                         case 4:

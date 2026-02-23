@@ -1,6 +1,44 @@
 #include "../include/solver.h"
 //#include <stdio.h>
 
+int num_possibilities_cell(const Cell c)
+{
+        int n = 0;
+        for (int i = 0; i < 9; i++)
+        {
+                if (c.is_possible[i]) n++;
+        }
+
+        return n;
+}
+
+int sum_possibilities_num_in_block(const Grid g, int block_y, int block_x, int num)
+{
+        int n = 0;
+
+        int actual_y, actual_x;
+        for (int cell_y = 0; cell_y < 3; cell_y++)
+        {
+                actual_y = cell_y + (block_y * 3);
+                for (int cell_x = 0; cell_x < 3; cell_x++)
+                {
+                        actual_x = cell_x + (block_x * 3);
+                        
+                        if (g[actual_y][actual_x].number != 0) continue; // If solved continue
+
+                        if (g[actual_y][actual_x].is_possible[num - 1]) n++;
+                }
+        }
+
+        return n;
+}
+
+bool is_cell_in_block(int cell_y, int cell_x, int block_y, int block_x)
+{
+        if ((int)(cell_y/3) == block_y && (int)(cell_x/3) == block_x) return true;
+        else return false;
+}
+
 void remove_possibles_grid(Grid *g)
 {
         for (int y = 0; y < 9; y++)
@@ -89,15 +127,15 @@ void set_sole_possibilities_solved_cell(Grid *g, int cell_y, int cell_x)
         }
 }
 
-int num_possibilities_cell(const Cell c)
+void solve_hidden_singles_grid(Grid *g)
 {
-        int n = 0;
-        for (int i = 0; i < 9; i++)
+        for (int y = 0; y < 3; y++)
         {
-                if (c.is_possible[i]) n++;
+                for (int x = 0; x < 3; x++)
+                {
+                        solve_hidden_singles_block(g, y, x);
+                }
         }
-
-        return n;
 }
 
 void solve_hidden_singles_block(Grid *g, int block_y, int block_x)
@@ -221,31 +259,4 @@ void solve_pointing_groups_column_block(Grid *g, int block_y, int block_x)
                         }
                 }
         }
-}
-
-int sum_possibilities_num_in_block(const Grid g, int block_y, int block_x, int num)
-{
-        int n = 0;
-
-        int actual_y, actual_x;
-        for (int cell_y = 0; cell_y < 3; cell_y++)
-        {
-                actual_y = cell_y + (block_y * 3);
-                for (int cell_x = 0; cell_x < 3; cell_x++)
-                {
-                        actual_x = cell_x + (block_x * 3);
-                        
-                        if (g[actual_y][actual_x].number != 0) continue; // If solved continue
-
-                        if (g[actual_y][actual_x].is_possible[num - 1]) n++;
-                }
-        }
-
-        return n;
-}
-
-bool is_cell_in_block(int cell_y, int cell_x, int block_y, int block_x)
-{
-        if ((int)(cell_y/3) == block_y && (int)(cell_x/3) == block_x) return true;
-        else return false;
 }
