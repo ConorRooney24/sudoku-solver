@@ -4,5 +4,6 @@
 #include "board.h"
 #include "io.h"
 #include "solver.h"
+#include "tui.h"
 
 #endif
