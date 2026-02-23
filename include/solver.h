@@ -4,6 +4,7 @@
 #include "board.h"
 #include <stdbool.h>
 
+bool is_solved_grid(const Grid g); // Returns true if a grid is solved, false if not
 int num_possibilities_cell(const Cell c); // returns the number of possibilities a given cell has
 int sum_possibilities_num_in_block(const Grid g, int block_y, int block_x, int num); // Takes grid, the coordinates of a block, and a number, returns how many cells have a possibility of being the given number
 bool is_cell_in_block(int cell_y, int cell_x, int block_y, int block_x);             // Returns true if the coordinates of the given cell are inside of the coordinates of the given block, and false if not

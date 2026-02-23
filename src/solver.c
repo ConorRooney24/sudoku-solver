@@ -1,6 +1,32 @@
 #include "../include/solver.h"
 //#include <stdio.h>
 
+bool is_solved_grid(const Grid g)
+{
+        for (int y = 0; y < 9; y++)
+        {
+                for (int x = 0; x < 9; x++)
+                {
+                        if (g[y][x].number == 0) return false;
+                }
+        }
+
+        int tally[9] = {0};
+        for (int y = 0; y < 9; y++)
+        {
+                for (int x = 0; x < 9; x++)
+                {
+                        for (int i = 0; i < 9; i++)
+                        {
+                                if (g[y][x].is_possible[i]) tally[i]++;
+                                if (tally[i] > 9) return false;
+                        }
+                }
+        }
+
+        return true;
+}
+
 int num_possibilities_cell(const Cell c)
 {
         int n = 0;
