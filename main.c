@@ -7,12 +7,11 @@ int main(void)
         Grid grid;
         grid_init(&grid);
 
-        io_read("data/puzzle_medium_1.txt", &grid);
-
-        bool auto_strip = true;
-        bool auto_set_solved = true;
+        io_read("data/puzzle_hard_1.txt", &grid);
 
         int user_input = 0;
+
+        clear_terminal();
 
         printf("[1] Automatic mode\n");
         printf("[2] Manual mode\n");
@@ -36,8 +35,7 @@ int main(void)
                 printf("[5] Solve Hidden Singles\n");
                 printf("[6] Solve pointing groups\n");
                 printf("[7] Write to 'output.txt'\n");
-                printf("[8] Toggle Auto Strip on 5 & 6 (%d)\n", auto_strip ? 1 : 0);
-                printf("[9] Toggle Auto Set Solved on 5 & 6 (%d)\n", auto_set_solved ? 1 : 0);
+                printf("[8] Solve hidden pairs\n");
                 printf("[0] Exit\n");
                 printf("$ ");
                 scanf("%d", &user_input);
@@ -65,29 +63,18 @@ int main(void)
                                 break;
 
                         case 5:
-                                if (auto_strip) remove_possibles_grid(&grid);
-                                if (auto_set_solved) set_sole_possibilities_solved(&grid);
                                 solve_hidden_singles_grid(&grid);
                                 break;
 
                         case 6:
-                                if (auto_strip) remove_possibles_grid(&grid);
-                                if (auto_set_solved) set_sole_possibilities_solved(&grid); 
                                 solve_pointing_groups_grid(&grid);
                                 break;
 
                         case 7:
                                 io_write("output.txt", grid);
                                 break;
-
                         case 8:
-                                if (auto_strip) auto_strip = false;
-                                else auto_strip = true;
-                                break;
-
-                        case 9:
-                                if (auto_set_solved) auto_set_solved = false;
-                                else auto_set_solved = true;
+                                solve_hidden_pairs_grid(&grid);
                                 break;
                         
                         default:
@@ -97,7 +84,7 @@ int main(void)
 
         automatic_mode_start:
 
-        
-        
+        printf("Automatic mode started\n");
+
         return 0;
 }

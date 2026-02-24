@@ -343,3 +343,124 @@ void solve_pointing_groups_column_block(Grid *g, int block_y, int block_x)
                 }
         }
 }
+
+void solve_hidden_pairs_grid(Grid *g)
+{
+        for (int y = 0; y < 3; y++)
+        {
+                for (int x = 0; x < 3; x++)
+                {
+                        //printf("\n\n --- ENTERING SCAN OF BLOCK [%d, %d]\n", y, x);
+                        solve_hidden_pairs_block(g, y, x);
+                }
+        }
+}
+
+void solve_hidden_pairs_block(Grid *g, int block_y, int block_x) // TODO This whole function needs refactored and heavily broken down. I need to make structs for things like coordinates, grid, cell and so on for more flexible functions. If we make a grid and cell struct, they should probably store pointers to their parent and also their own coordinates relative to their cell and maybe to the whole grid too.
+{
+        int cell_a_y, cell_a_x, cell_b_y, cell_b_x; // saved coordinates of the two member cells in the block (not on the board so they are 0-2)
+        int possibility_a, possibility_b; // 0-8, the possible numbers that both cell a and cell b share (the ones we must remove from all unsolved cells in this grid which are not cell a or cell b)
+
+        int actual_y, actual_x; // coordinates of the cell on the grid instead of coordinates of the cell in the block
+        for (int cell_y = 0; cell_y < 3; cell_y++)
+        {
+                actual_y = cell_y + (block_y * 3);
+                for (int cell_x = 0; cell_x < 3; cell_x++)
+                {
+                        actual_x = cell_x + (block_x * 3);
+
+                        //printf("Cell A Scan starting for [%d, %d] (first loop)\n", actual_y, actual_x);
+
+
+                        if ((*g)[actual_y][actual_x].number != 0) continue; // if solved, continue
+                        
+                        if (num_possibilities_cell((*g)[actual_y][actual_x]) == 2) // we have found a cell with only two possibles
+                        {
+                                // We set cell a to this cell
+                                cell_a_y = actual_y;
+                                cell_a_x = actual_x;
+
+                                //printf("\nFound cell A [%d, %d]\n", cell_a_y, cell_a_x);
+
+                                // and then we search the block again for another cell that is not cell a that matches cell a.
+                                int second_actual_y, second_actual_x;
+                                for (int second_cell_y = 0; second_cell_y < 3; second_cell_y++)
+                                {
+                                        second_actual_y = second_cell_y + (block_y * 3);
+                                        for (int second_cell_x = 0; second_cell_x < 3; second_cell_x++)
+                                        {
+                                                second_actual_x = second_cell_x + (block_x * 3);
+
+                                                //printf("Looking for cell B. Currently checking [%d, %d]\n", second_actual_y, second_actual_x);
+
+                                                if ((*g)[second_actual_y][second_actual_x].number != 0) /*printf("Cell B candidate [%d, %d] exit because solved\n", second_actual_y, second_actual_x);*/ continue; // if solved, continue
+                                                if (second_actual_y == cell_a_y && second_actual_x == cell_a_x) /*printf("Cell B candidate [%d, %d] exit because == cell a\n", second_actual_y, second_actual_x);*/ continue; // if cell a, continue
+                                                
+                                                //printf("Cell B candidate [%d, %d] is not solved, and is not cell A. Checking possibles...\n", second_actual_y, second_actual_x);
+                                                bool cells_match = true;
+                                                for (int n = 0; n < 9; n++)
+                                                {
+                                                        //printf("checking possible [%d]\n", n);
+                                                        if ((*g)[cell_a_y][cell_a_x].is_possible[n] != (*g)[second_actual_y][second_actual_x].is_possible[n]) // if the cells do not match
+                                                        {
+                                                                cells_match = false;
+                                                                //printf("Exit loop because cell a and cell b possibles do not match\n", second_actual_y, second_actual_x);
+                                                                break;
+                                                        }
+                                                }
+                                                
+
+                                                if (cells_match)
+                                                {
+                                                        // record location of cell b
+                                                        cell_b_y = second_actual_y;
+                                                        cell_b_x = second_actual_x;
+
+                                                        //printf("Found cell b [%d, %d]\n", cell_b_y, cell_b_x);
+
+                                                        // record the two common numbers
+                                                        int i = 0;
+                                                        for (int n = 0; n < 9; n++)
+                                                        {
+                                                                if ((*g)[cell_a_y][cell_a_x].is_possible[n])
+                                                                {
+                                                                        if (i == 0)
+                                                                        {
+                                                                                possibility_a = n;
+                                                                                i++;
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                                possibility_b = n;
+                                                                                break;
+                                                                        }
+                                                                }
+                                                        }
+
+                                                        // loop over the grid a third time removing the two common numbers as a possibility from unsolved cells that are not cell a or cell b
+                                                        //printf("    Found Pair!   Looping over other cells in block and removing possibilities\n");
+                                                        int third_actual_y, third_actual_x;
+                                                        for (int third_cell_y = 0; third_cell_y < 3; third_cell_y++)
+                                                        {
+                                                                third_actual_y = third_cell_y + (block_y * 3);
+                                                                for (int third_cell_x = 0; third_cell_x < 3; third_cell_x++)
+                                                                {
+                                                                        third_actual_x = third_cell_x + (block_x * 3);
+
+                                                                        if ((*g)[third_actual_y][third_actual_x].number != 0) continue; // if solved, continue
+                                                                        if((third_actual_y == cell_a_y && third_actual_x == cell_a_x) || (third_actual_y == cell_b_y && third_actual_x == cell_b_x)) continue; // If on cell a or cell b
+
+                                                                        // if we are on a new cell that is not solved and is not cell or cell b
+                                                                        (*g)[third_actual_y][third_actual_x].is_possible[possibility_a] = false;
+                                                                        (*g)[third_actual_y][third_actual_x].is_possible[possibility_b] = false;
+
+                                                                        //printf("Removed possibles from [%d, %d]\n", third_actual_y, third_actual_x);
+                                                                }
+                                                        }
+                                                }
+                                        }
+                                }
+                        }
+                }
+        }
+}

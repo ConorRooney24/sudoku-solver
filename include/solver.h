@@ -30,4 +30,8 @@ void solve_pointing_groups_grid (Grid *g);                                  // C
 void solve_pointing_groups_row_block(Grid *g, int block_y, int block_x);    // FOR A ROW: Takes a grid and the coordinates of a block, attempts to find pointing pairs or pointing triplets and then removes possibilities from corresponding cells outside of the block. For example, if we look in a block and find that only two of the unsolved squares have a possibility of being 2, if those cells are on the same row (or column), we know that there will not be a 2 on that row (or column) outside of this block.
 void solve_pointing_groups_column_block(Grid *g, int block_y, int block_x); // Same as above but for columns instead of rows
 
+// TODO Refactor heavily. the block function is very heavy and poorly written. Needs to be broken down into smaller functions. also it only currently solves for other cells. if it finds a pair, it only removes possibilities from other cells. it should also look for pairs where only two cells share them and then remove the other possibilities from the cells that are sharing the numbers. Hard to explain but here is an image (https://sudoku.com/img/post-images/1646980670-9.%20Hidden%20pairs_1.png)
+void solve_hidden_pairs_grid(Grid *g);                            // Calls solve_hidden_pairs_block for every block in the grid
+void solve_hidden_pairs_block(Grid *g, int block_y, int block_x); // Scans a block for hidden pairs (two cells which have the same only 2 possible numbers). if it finds a hidden pair, it removes the involved numbers as possibilities from other unsolved cells in the same block.
+
 #endif
