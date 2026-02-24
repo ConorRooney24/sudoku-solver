@@ -118,3 +118,23 @@ void cell_print_simple(const Cell c)
                 printf("\n");
         }
 }
+
+CoordBlock coord_cell_abs_to_block(CoordCellAbs cell)
+{
+        CoordBlock b;
+
+        b.x = (int)(cell.x/3);
+        b.y = (int)(cell.y/3);
+
+        return b;
+}
+
+CoordCellAbs coord_rel_to_abs(CoordBlock block, CoordCellRel cell)
+{
+        CoordCellAbs c;
+
+        c.x = cell.x + (3 * block.x);
+        c.y = cell.y + (3 * block.y);
+
+        return c;
+}

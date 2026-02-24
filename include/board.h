@@ -8,6 +8,15 @@
 #define CELL_PRINT_WIDTH 11
 #define CELL_PRINT_HEIGHT 5
 
+struct Coordinates
+{
+        int y, x;
+};
+
+typedef struct Coordinates CoordBlock;   // Block coords relative to grid 0-2
+typedef struct Coordinates CoordCellRel; // Cell coords relative to block 0-2
+typedef struct Coordinates CoordCellAbs; // Cell coords relative to grid 0-9
+
 typedef struct Cell
 {
         bool is_possible[9]; // Every possible number that this cell could be. if 0 is true, then it is possible for this cell to be 1
@@ -24,5 +33,8 @@ void grid_print_simple(const Grid g);                           // Prints the gr
 void grid_print_cell_info(const Grid g);                        // Calls Cell_print for every cell on a grid and displays cell coordinates beside each cells information.
 void cell_print(const Cell c, Colour background, int offset_x); // Prints cell information in a formatted way showing solved number if solved, and possible numbers if unsolved. It will move the cursor by the given offset. offset_x of 10 means move the cursor 10 times right before each print.
 void cell_print_simple(const Cell c);                           // Prints a cells information. If it has been solved or not, And its possible numbers.
+
+CoordBlock coord_cell_abs_to_block(CoordCellAbs cell);              // Takes the coordinates of a cell and returns the coordinates of the block that cell is in.
+CoordCellAbs coord_rel_to_abs(CoordBlock block, CoordCellRel cell); // Takes relative coords of a cell and its grid and returns absolute coordinates of cell
 
 #endif // BOARD_H
